@@ -1,0 +1,24 @@
+table { table-layout: fixed; }
+table td { word-wrap: break-word; }
+
+tr {
+width: 100%;
+display: inline-table;
+table-layout: fixed;
+}
+
+body{
+height: 100% !important;
+}
+
+table{
+ height:100%;              // <-- Select the height of the table
+ display: -moz-groupbox;    // Firefox Bad Effect
+}
+tbody{
+  overflow-y: scroll;          //  <-- Select the height of the body
+  width: 100%;
+  height: calc( 100vh - 120px );
+  position: absolute;
+}
+

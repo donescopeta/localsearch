@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+  <head>
+	<title>Flask app</title>
+	<!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+
+	<!-- jQuery library -->
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+
+	<!-- Popper JS -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+
+	<!-- Latest compiled JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+  </head>
+  <body>
+    <header>
+    
+    <div class="container">
+		<div class="input-group">
+		   <input id="s_inp" type="text" class="form-control">
+			<div width="10px"><select id="limit" class="form-control"">
+			  <option>10</option>
+			  <option>50</option>
+			  <option>100</option>
+			  <option>500</option>
+			  <option>1000</option>
+			  <option>all</option>
+			</select></div>
+		   <span class="input-group-btn">
+				<button id="s_btn" class="btn btn-success" type="button">Search!</button>
+		   </span>
+		</div>
+	</div>
+	<div id="content">
+      {% block content %}
+      {% endblock %}
+      </div>
+  </body>
+	<script type="text/javascript">
+		$ = jQuery;
+		$(document).ready(()=>{
+			$("#s_btn").on("click",()=>{
+				$("#content").load("/search",{
+					"q" : $("#s_inp").val(),
+					"n" : $( "#limit option:selected" ).text()
+				});
+			}) ;
+			window.keytrap = null;
+			$("#s_inp").keydown(()=>{
+				clearTimeout(window.keytrap);
+				window.keytrap = setTimeout(()=>{
+					console.log("click")
+					$("#s_btn").trigger('click')
+				},400)
+			})
+			$('#limit').on('change', ()=>{ $("#s_btn").trigger('click') });
+		});
+	</script>
+</html>
