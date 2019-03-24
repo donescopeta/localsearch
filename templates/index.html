@@ -20,7 +20,7 @@
     
     <div class="container">
 		<div class="input-group">
-		   <input id="s_inp" type="text" class="form-control">
+		   <input id="s_inp" type="text" value="{{q}}" class="form-control">
 			<div width="10px"><select id="limit" class="form-control"">
 			  <option>10</option>
 			  <option>50</option>
@@ -34,8 +34,9 @@
 		   </span>
 		</div>
 	</div>
-	<div id="content">
+	<div id="content" class="cfontainer">
       {% block content %}
+            {{content|safe}}
       {% endblock %}
       </div>
   </body>
@@ -43,10 +44,11 @@
 		$ = jQuery;
 		$(document).ready(()=>{
 			$("#s_btn").on("click",()=>{
-				$("#content").load("/search",{
-					"q" : $("#s_inp").val(),
-					"n" : $( "#limit option:selected" ).text()
-				});
+                let v = encodeURIComponent( $("#s_inp").val() );
+                let n = $( "#limit option:selected" ).text();
+                let url = `search/${v}/${n}`
+		$("#content").load("/r" + url);
+                window.history.replaceState("flask", "Search File", "/" + url)
 			}) ;
 			window.keytrap = null;
 			$("#s_inp").keydown(()=>{

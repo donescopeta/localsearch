@@ -12,15 +12,13 @@ app.config.from_object(config)
 
 mysql =  MySQL(app)
 
-@app.route("/search",methods=['GET', 'POST'])
-def search():
+s_url = "http://89.186.9.133:90/pdf/"
+
+@app.route("/rsearch/<q>/<n>")
+def search(q,n):
     c = mysql.connection.cursor()
-    q = request.form.get('q')
-    n = request.form.get('n')
     if n == "all" : n = "1e6"
-    print(q,n)
-    c.callproc("pSzukaj", (q, n ))
-    #c.execute("select * from (fileinfo.pSzukaj(%s,%s)) ORDER BY %s ASC ", (q, n, "name"))
+    c.callproc("pSzukaj", (q, n))
     headers = next(zip(*c.description))[1:]
     rows = c.fetchall()
     
@@ -44,8 +42,17 @@ def search():
     	</tbody>
     </table>
     """, headers = headers, rows = rows, s_url = "http://89.186.9.133:90/pdf/")
-    
-	
+    	
+@app.route("/search/<qu>/")
+@app.route("/search/<qu>/<n>")
+def u_search(qu,n = "all"):
+    return render_template("index.html", q = qu, content = search(qu,n) )
+
+@app.route("/md5/<gmd5>")
+def filebymd5(gmd5):
+     c = mysql.connection.cursor()
+     c.execute("SELECT CONCAT(path,'/',name) FROM pdf WHERE md5 = %s;",(gmd5,))
+     return """<meta http-equiv="refresh" content="0; URL='{0}'" />""".format(s_url + c.fetchone()[0])
 
 @app.route("/")
 def index():

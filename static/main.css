@@ -16,9 +16,8 @@ table{
  display: -moz-groupbox;    // Firefox Bad Effect
 }
 tbody{
-  overflow-y: scroll;          //  <-- Select the height of the body
-  width: 100%;
-  height: calc( 100vh - 120px );
-  position: absolute;
+    position: fixed;
+    overflow-y: scroll;
+    height: inherit;
 }
 
